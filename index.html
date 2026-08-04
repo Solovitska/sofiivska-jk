@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="google" content="notranslate" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ЖК Софіївська Квартальність | Сучасні квартири</title>
+  <title>ЖК Софіївська Квартальність | Преміум Житло</title>
 
   <!-- Swiper.js CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -12,69 +12,196 @@
   <!-- Leaflet CSS (OpenStreetMap) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-  <style>
-    /* CSS Стилі */
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
-    
-    header { background: #1a252f; color: #fff; padding: 20px; text-align: center; }
-    header h1 { font-size: 24px; }
-    header p { color: #cbd5e1; font-size: 14px; }
+  <!-- Google Fonts: Inter & Syne -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
-    .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-    .section-title { margin-bottom: 15px; font-size: 20px; border-bottom: 2px solid #2563eb; display: inline-block; padding-bottom: 5px; }
+  <style>
+    :root {
+      --bg-dark: #0f1115;
+      --card-bg: #181b22;
+      --card-border: rgba(197, 160, 112, 0.15);
+      
+      /* Колірна палітра: Чорний, Коричневий, Блакитний */
+      --accent-brown: #c5a070;
+      --accent-brown-dark: #2a2219;
+      --accent-blue: #00f0ff;
+      --accent-blue-hover: #00b8c4;
+      
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; }
+
+    /* Header */
+    header { 
+      background: linear-gradient(180deg, rgba(24, 27, 34, 0.9) 0%, rgba(15, 17, 21, 1) 100%);
+      padding: 35px 20px; 
+      text-align: center; 
+      border-bottom: 1px solid var(--card-border);
+    }
+    header h1 { 
+      font-family: 'Syne', sans-serif; 
+      font-size: 32px; 
+      letter-spacing: 1px;
+      color: #fff;
+      text-transform: uppercase;
+    }
+    header h1 span { color: var(--accent-brown); }
+    header p { color: var(--accent-blue); font-size: 14px; margin-top: 5px; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
 
     /* Layout */
-    .grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 40px; }
-    @media (max-width: 768px) { .grid-layout { grid-template-columns: 1fr; } }
+    .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    .grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+    @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } }
 
-    .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; }
+    /* Cards */
+    .card { 
+      background: var(--card-bg); 
+      padding: 25px; 
+      border-radius: 16px; 
+      border: 1px solid var(--card-border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+      margin-bottom: 30px; 
+    }
+
+    .section-title { 
+      font-family: 'Syne', sans-serif;
+      margin-bottom: 20px; 
+      font-size: 20px; 
+      color: var(--accent-brown); 
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--accent-blue);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-blue);
+    }
 
     /* Swiper Slider */
-    .swiper { width: 100%; height: 350px; border-radius: 8px; }
+    .swiper { width: 100%; height: 380px; border-radius: 12px; }
     .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .swiper-button-next, .swiper-button-prev { color: var(--accent-blue) !important; }
+    .swiper-pagination-bullet-active { background: var(--accent-blue) !important; box-shadow: 0 0 8px var(--accent-blue); }
 
     /* SVG Floor Plan */
-    .floor-plan-container { text-align: center; background: #f1f5f9; padding: 20px; border-radius: 8px; }
-    .st-apt { fill: #22c55e; opacity: 0.6; cursor: pointer; transition: all 0.3s; stroke: #ffffff; stroke-width: 2; }
-    .st-apt:hover { opacity: 0.9; fill: #2563eb; }
-    .st-apt.sold { fill: #ef4444; cursor: not-allowed; opacity: 0.5; }
+    .floor-plan-container { 
+      text-align: center; 
+      background: #0b0c0e; 
+      padding: 30px; 
+      border-radius: 12px; 
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .st-apt { 
+      fill: var(--accent-brown-dark); 
+      stroke: var(--accent-brown);
+      stroke-width: 1.5;
+      cursor: pointer; 
+      transition: all 0.3s ease; 
+    }
+    .st-apt:hover { 
+      fill: rgba(0, 240, 255, 0.2); 
+      stroke: var(--accent-blue);
+      filter: drop-shadow(0px 0px 8px var(--accent-blue));
+    }
+    .st-apt.sold { 
+      fill: #2a1515; 
+      stroke: #7f1d1d; 
+      cursor: not-allowed; 
+      opacity: 0.6;
+    }
+    svg text { pointer-events: none; user-select: none; font-size: 14px; letter-spacing: 1px; }
 
     /* Dynamic Info Box */
-    .apt-details { background: #eff6ff; border-left: 4px solid #2563eb; padding: 15px; margin-top: 15px; border-radius: 4px; }
+    .apt-details { 
+      background: rgba(0, 240, 255, 0.03); 
+      border-left: 3px solid var(--accent-blue); 
+      padding: 18px; 
+      margin-top: 20px; 
+      border-radius: 6px; 
+      color: var(--text-main);
+    }
 
     /* Map */
-    #map { height: 300px; width: 100%; border-radius: 8px; }
+    #map { height: 320px; width: 100%; border-radius: 12px; border: 1px solid var(--card-border); }
+    .leaflet-tile { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3); } /* Dark map effect */
+
+    /* Features List */
+    .features-list { list-style: none; padding: 0; }
+    .features-list li { 
+      padding: 12px 0; 
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+      display: flex; 
+      justify-content: space-between; 
+      font-size: 14px;
+    }
+    .features-list li strong { color: var(--accent-brown); }
 
     /* Form */
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
-    .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-    .btn-submit { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    .btn-submit:hover { background: #1d4ed8; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-weight: 500; margin-bottom: 8px; font-size: 13px; color: var(--text-muted); }
+    .form-group input { 
+      width: 100%; 
+      padding: 12px 15px; 
+      background: #0f1115;
+      border: 1px solid var(--card-border); 
+      border-radius: 8px; 
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus { border-color: var(--accent-blue); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+    
+    .btn-submit { 
+      width: 100%; 
+      background: linear-gradient(135deg, var(--accent-brown) 0%, #9a7647 100%); 
+      color: #000; 
+      border: none; 
+      padding: 14px; 
+      border-radius: 8px; 
+      font-weight: 700; 
+      cursor: pointer; 
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s;
+    }
+    .btn-submit:hover { 
+      box-shadow: 0 0 15px rgba(197, 160, 112, 0.4);
+      transform: translateY(-1px);
+    }
   </style>
 </head>
-<body>
+<body class="notranslate">
 
   <header>
-    <h1>ЖК «Софіївська Квартальність»</h1>
-    <p>Софіївська Борщагівка • Комфорт-Клас</p>
+    <h1>ЖК <span>Софіївська Квартальність</span></h1>
+    <p>Софіївська Борщагівка • Преміум Клас</p>
   </header>
 
   <div class="container">
     <div class="grid-layout">
       
-      <!-- Ліва колонка: Галерея та SVG План -->
+      <!-- Ліва колонка -->
       <div>
         
-        <!-- Галерея Swiper.js -->
+        <!-- Swiper Slider -->
         <div class="card">
-          <h2 class="section-title">Галерея ЖК</h2>
+          <h2 class="section-title">Візуалізація комплексу</h2>
           <div class="swiper mySwiper">
             <div class="swiper-wrapper">
-              <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80" alt="Фасад"></div>
-              <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Інтер'єр"></div>
-              <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" alt="Двір"></div>
+              <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1000&q=80" alt="Фасад"></div>
+              <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80" alt="Інтер'єр"></div>
+              <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1000&q=80" alt="Двір"></div>
             </div>
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
@@ -82,65 +209,66 @@
           </div>
         </div>
 
-        <!-- Інтерактивний SVG План Поверху -->
+        <!-- SVG Floor Plan -->
         <div class="card">
           <h2 class="section-title">Інтерактивний план поверху</h2>
-          <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Наведіть або натисніть на квартиру для перегляду деталей:</p>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Оберіть вільну квартиру для перегляду її параметрів та вартості:</p>
           
           <div class="floor-plan-container">
             <svg viewBox="0 0 500 200" width="100%" height="auto">
               <!-- Квартира 101 -->
               <rect id="apt101" class="st-apt" x="20" y="20" width="130" height="160" data-num="101" data-rooms="1-к" data-area="42 м²" data-price="$41,000" />
-              <text x="70" y="105" fill="#fff" font-weight="bold" pointer-events="none">№101</text>
+              <text x="65" y="105" fill="#c5a070" font-weight="bold">№101</text>
 
               <!-- Квартира 102 (Продано) -->
               <rect id="apt102" class="st-apt sold" x="170" y="20" width="150" height="160" data-num="102" data-status="sold" />
-              <text x="220" y="105" fill="#fff" font-weight="bold" pointer-events="none">ПРОДАНО</text>
+              <text x="210" y="105" fill="#7f1d1d" font-weight="bold">ПРОДАНО</text>
 
               <!-- Квартира 103 -->
               <rect id="apt103" class="st-apt" x="340" y="20" width="140" height="160" data-num="103" data-rooms="2-к" data-area="65 м²" data-price="$62,000" />
-              <text x="390" y="105" fill="#fff" font-weight="bold" pointer-events="none">№103</text>
+              <text x="385" y="105" fill="#c5a070" font-weight="bold">№103</text>
             </svg>
           </div>
 
-          <!-- Динамічний блок інформації -->
+          <!-- Dynamic Info Box -->
           <div id="apt-info" class="apt-details">
-            Выберите квартиру на плане выше, чтобы посмотреть характеристики.
+            Клікніть на доступну квартиру на схемі поверху.
           </div>
         </div>
 
-        <!-- Карта OpenStreetMap -->
+        <!-- OpenStreetMap -->
         <div class="card">
-          <h2 class="section-title">Розташування та інфраструктура</h2>
+          <h2 class="section-title">Розташування та оточення</h2>
           <div id="map"></div>
         </div>
 
       </div>
 
-      <!-- Права колонка: Характеристики та Форма -->
+      <!-- Права колонка -->
       <div>
         <div class="card">
-          <h2 class="section-title">Про комплекс</h2>
-          <ul style="list-style: none; padding: 0; line-height: 2;">
-            <li>🏢 <strong>Поверховість:</strong> 10 поверхів</li>
-            <li>🔥 <strong>Опалення:</strong> Індивідуальне газове</li>
-            <li>⚡ <strong>Автономність:</strong> Генератор на ліфт та воду</li>
-            <li>🚌 <strong>Транспорт:</strong> 15 хв до м. Академмістечко</li>
+          <h2 class="section-title">Характеристики</h2>
+          <ul class="features-list">
+            <li><span>Поверховість:</span> <strong>10 поверхів</strong></li>
+            <li><span>Опалення:</span> <strong>Власна котельня</strong></li>
+            <li><span>Автономність:</span> <strong>Повний генератор</strong></li>
+            <li><span>До метро:</span> <strong>15 хв (Академмістечко)</strong></li>
+            <li><span>Паркінг:</span> <strong>Підземний з ліфтом</strong></li>
           </ul>
         </div>
 
         <div class="card">
           <h2 class="section-title">Записатися на перегляд</h2>
-          <form id="lead-form">
+          <form id="lead-form" onsubmit="event.preventDefault(); alert('Дякуємо! Вашу заявку на перегляд прийнято.');">
             <div class="form-group">
               <label>Ваше ім'я</label>
               <input type="text" required placeholder="Олександр">
             </div>
             <div class="form-group">
-              <label>Телефон</label>
+              <label>Ваш телефон</label>
               <input type="tel" required placeholder="+380 (97) 000-00-00">
             </div>
-            <button type="submit" class="btn-submit">Надіслати заявку</button>
+            <button type="submit" class="btn-submit">Отримати консультацію</button>
           </form>
         </div>
       </div>
@@ -150,52 +278,56 @@
 
   <!-- Swiper.js JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <!-- Leaflet JS (OpenStreetMap) -->
+  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    // 1. Ініціалізація Swiper слайдера
-    const swiper = new Swiper(".mySwiper", {
-      loop: true,
-      navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-      pagination: { el: ".swiper-pagination", clickable: true },
-    });
-
-    // 2. Логіка інтерактивного SVG Плану
-    const apts = document.querySelectorAll('.st-apt');
-    const infoBox = document.getElementById('apt-info');
-
-    apts.forEach(apt => {
-      apt.addEventListener('click', function() {
-        if (this.classList.contains('sold')) {
-          infoBox.innerHTML = `<strong>Квартира продана!</strong> Оберіть інший варіант.`;
-          infoBox.style.borderColor = '#ef4444';
-          return;
-        }
-        
-        const num = this.getAttribute('data-num');
-        const rooms = this.getAttribute('data-rooms');
-        const area = this.getAttribute('data-area');
-        const price = this.getAttribute('data-price');
-
-        infoBox.style.borderColor = '#2563eb';
-        infoBox.innerHTML = `
-          <strong>Обрано квартиру №${num}</strong><br>
-          Кімнат: ${rooms} | Площа: ${area}<br>
-          <span style="font-size: 18px; color: #2563eb; font-weight: bold;">Вартість: ${price}</span>
-        `;
+    document.addEventListener("DOMContentLoaded", function () {
+      // Swiper Slider
+      const swiper = new Swiper(".mySwiper", {
+        loop: true,
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+        pagination: { el: ".swiper-pagination", clickable: true },
       });
+
+      // SVG Floor Plan Logic
+      const apts = document.querySelectorAll('.st-apt');
+      const infoBox = document.getElementById('apt-info');
+
+      apts.forEach(apt => {
+        apt.addEventListener('click', function() {
+          if (this.classList.contains('sold')) {
+            infoBox.innerHTML = `<strong style="color: #ef4444;">Квартира заброньована або продана.</strong> Будь ласка, оберіть інший варіант.`;
+            infoBox.style.borderColor = '#ef4444';
+            return;
+          }
+          
+          const num = this.getAttribute('data-num');
+          const rooms = this.getAttribute('data-rooms');
+          const area = this.getAttribute('data-area');
+          const price = this.getAttribute('data-price');
+
+          infoBox.style.borderColor = 'var(--accent-blue)';
+          infoBox.innerHTML = `
+            <strong style="color: var(--accent-brown); font-size: 16px;">Квартира №${num}</strong><br>
+            Планування: ${rooms} | Загальна площа: ${area}<br>
+            <span style="font-size: 20px; color: var(--accent-blue); font-weight: bold; margin-top: 5px; display: inline-block;">Вартість: ${price}</span>
+          `;
+        });
+      });
+
+      // OpenStreetMap (Dark Theme map)
+      if (document.getElementById('map')) {
+        const map = L.map('map').setView([50.4022, 30.3671], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        L.marker([50.4022, 30.3671]).addTo(map)
+          .bindPopup('<b style="color: #000;">ЖК Софіївська Квартальність</b>')
+          .openPopup();
+      }
     });
-
-    // 3. Ініціалізація карти OpenStreetMap (Софіївська Борщагівка)
-    const map = L.map('map').setView([50.4022, 30.3671], 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
-
-    L.marker([50.4022, 30.3671]).addTo(map)
-      .bindPopup('<b>ЖК Софіївська Квартальність</b><br>Головний офіс продажів')
-      .openPopup();
   </script>
 </body>
 </html>
